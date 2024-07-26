@@ -31,7 +31,7 @@ func HandleRequests() {
 
 	router.GET("/top", actions.GetTops)
 
-	router.Run(":8000")
+	router.Run()
 }
 
 func configCors(router *gin.Engine) {
