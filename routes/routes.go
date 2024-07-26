@@ -31,7 +31,7 @@ func HandleRequests() {
 
 	router.GET("/top", actions.GetTops)
 
-	router.Run()
+	router.Run(":8080")
 }
 
 func configCors(router *gin.Engine) {
