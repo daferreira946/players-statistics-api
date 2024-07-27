@@ -17,7 +17,7 @@ func ConnectDatabase() {
 	usingUrl := true
 	log.Println(dsn)
 
-	if dsn != "" {
+	if dsn == "" {
 		database := os.Getenv("POSTGRES_DB")
 		password := os.Getenv("POSTGRES_PASSWORD")
 		user := os.Getenv("POSTGRES_USER")
