@@ -32,7 +32,13 @@ func HandleRequests() {
 
 	router.GET("/top", actions.GetTops)
 
-	err := router.Run(":8080")
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		log.Fatal("$PORT not set")
+	}
+
+	err := router.Run(":" + port)
 	if err != nil {
 		log.Println("error to start", err.Error())
 	}
