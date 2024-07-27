@@ -46,7 +46,7 @@ func connect(dsn string, usingUrl bool) (*gorm.DB, error) {
 		return gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	}
 
-	sqlDB, err := sql.Open("postgres", dsn)
+	sqlDB, err := sql.Open("pgx", dsn)
 
 	if err != nil {
 		log.Fatal(err)
