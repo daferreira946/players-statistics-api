@@ -15,6 +15,7 @@ var DB *gorm.DB
 func ConnectDatabase() {
 	dsn := os.Getenv("DATABASE_URL")
 	usingUrl := true
+	log.Println(dsn)
 
 	if dsn != "" {
 		database := os.Getenv("POSTGRES_DB")
