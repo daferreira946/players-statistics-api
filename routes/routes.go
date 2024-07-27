@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"log"
 	"os"
 	"players/actions"
 )
@@ -31,7 +32,10 @@ func HandleRequests() {
 
 	router.GET("/top", actions.GetTops)
 
-	router.Run(":8080")
+	err := router.Run(":8080")
+	if err != nil {
+		log.Println("error to start", err.Error())
+	}
 }
 
 func configCors(router *gin.Engine) {
