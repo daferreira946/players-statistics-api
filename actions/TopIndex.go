@@ -42,7 +42,9 @@ func GetTops(context *gin.Context) {
 			return
 		}
 
-		query.Where("players.is_monthly = ?", onlyMonthlyBool)
+		if onlyMonthlyBool {
+			query.Where("players.is_monthly = ?", onlyMonthlyBool)
+		}
 	}
 
 	if monthYear != "" {
