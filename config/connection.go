@@ -11,14 +11,14 @@ import (
 var DB *gorm.DB
 
 func ConnectDatabase() {
-	database := os.Getenv("POSTGRES_DB")
-	password := os.Getenv("POSTGRES_PASSWORD")
-	user := os.Getenv("POSTGRES_USER")
-	host := "localhost"
-	port := "5432"
 	dsn := os.Getenv("DATABASE_URL")
 
 	if dsn != "" {
+		database := os.Getenv("POSTGRES_DB")
+		password := os.Getenv("POSTGRES_PASSWORD")
+		user := os.Getenv("POSTGRES_USER")
+		host := "localhost"
+		port := "5432"
 		dsn = fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", host, user, password, database, port)
 	}
 
