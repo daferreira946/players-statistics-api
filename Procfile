@@ -1,1 +1,1 @@
-web: players-statistics
+web: server
