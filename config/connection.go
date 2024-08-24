@@ -34,7 +34,7 @@ func ConnectDatabase() {
 	}
 
 	DB = connection
-	err = DB.AutoMigrate(&models.Player{}, &models.Score{})
+	err = DB.AutoMigrate(&models.Player{}, &models.Score{}, &models.User{})
 
 	if err != nil {
 		panic(err)

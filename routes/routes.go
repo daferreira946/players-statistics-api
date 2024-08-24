@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"players/actions"
+	"players/middlewares"
 )
 
 func HandleRequests() {
@@ -13,19 +14,22 @@ func HandleRequests() {
 
 	configCors(router)
 
+	router.POST("/user/login", actions.Login)
+	router.POST("/user/register", actions.CreateUser)
+
 	router.GET("/", func(context *gin.Context) {
 		context.JSON(200, gin.H{
 			"message": "Health",
 		})
 	})
 	router.GET("/players", actions.GetAllPlayers)
-	router.POST("/player", actions.SavePlayer)
+	router.POST("/player", middlewares.CheckAuth, actions.SavePlayer)
 	router.GET("/player/:id", actions.GetPlayerById)
-	router.PATCH("/player/:id", actions.UpdatePlayer)
-	router.DELETE("/player/:id", actions.DeletePlayer)
+	router.PATCH("/player/:id", middlewares.CheckAuth, actions.UpdatePlayer)
+	router.DELETE("/player/:id", middlewares.CheckAuth, actions.DeletePlayer)
 
-	router.POST("/player/:id/addGoal", actions.AddGoalToPlayer)
-	router.POST("/player/:id/addAssist", actions.AddAssistToPlayer)
+	router.POST("/player/:id/addGoal", middlewares.CheckAuth, actions.AddGoalToPlayer)
+	router.POST("/player/:id/addAssist", middlewares.CheckAuth, actions.AddAssistToPlayer)
 
 	router.GET("/assists", actions.GetAllAssists)
 	router.GET("/goals", actions.GetAllGoals)
