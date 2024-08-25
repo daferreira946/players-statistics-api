@@ -15,7 +15,7 @@ func HandleRequests() {
 	configCors(router)
 
 	router.POST("/user/login", actions.Login)
-	router.POST("/user/register", actions.CreateUser)
+	router.POST("/user/register", middlewares.CheckAuth, actions.CreateUser)
 
 	router.GET("/", func(context *gin.Context) {
 		context.JSON(200, gin.H{
