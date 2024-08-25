@@ -55,7 +55,7 @@ func CheckAuth(c *gin.Context) {
 	}
 
 	if float64(time.Now().Unix()) > claims["exp"].(float64) {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token is expired"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired token"})
 		c.AbortWithStatus(http.StatusUnauthorized)
 		return
 	}
