@@ -35,7 +35,7 @@ func Login(c *gin.Context) {
 	generateToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id":       userFound.ID,
 		"username": userFound.Username,
-		"exp":      time.Now().Add(time.Hour * 24).Unix(),
+		"exp":      time.Now().Add(time.Hour * 2).Unix(),
 	})
 
 	token, err := generateToken.SignedString([]byte(os.Getenv("SECRET_KEY")))
