@@ -39,8 +39,20 @@ func AddAssistToPlayer(context *gin.Context) {
 		return
 	}
 
-	player.Assists += assists.Value
+	var presence models.Presence
+	config.DB.Where("player_id = ?", player.ID).Where("date = ?", assists.Date).First(&presence)
 
+	if presence.ID == 0 {
+		err := config.DB.Model(&player).Association("Presences").Append(&models.Presence{Date: assists.Date})
+		if err != nil {
+			context.JSON(http.StatusBadRequest, gin.H{
+				"message": "Could not save the presence",
+			})
+			return
+		}
+	}
+
+	player.Assists += assists.Value
 	config.DB.Model(&player).Updates(player)
 
 	for i := 0; i < assists.Value; i++ {
@@ -54,6 +66,9 @@ func AddAssistToPlayer(context *gin.Context) {
 			return
 		}
 	}
+
+	player.Assists += assists.Value
+	config.DB.Model(&player).Updates(player)
 
 	context.JSON(http.StatusOK, gin.H{"player": player.TransposeStructs()})
 }

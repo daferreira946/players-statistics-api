@@ -6,6 +6,6 @@ import (
 
 type Presence struct {
 	gorm.Model
-	PlayerID uint   `json:"player_id" gorm:"not null"`
-	Date     string `json:"date" gorm:"not null"`
+	PlayerID uint   `json:"player_id" gorm:"not null;uniqueIndex:idx_date_player"`
+	Date     string `json:"date" gorm:"not null;uniqueIndex:idx_date_player"`
 }

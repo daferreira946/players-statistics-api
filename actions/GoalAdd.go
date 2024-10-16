@@ -39,9 +39,18 @@ func AddGoalToPlayer(context *gin.Context) {
 		return
 	}
 
-	player.Goals += goals.Value
+	var presence models.Presence
+	config.DB.Where("player_id = ?", player.ID).Where("date = ?", goals.Date).First(&presence)
 
-	config.DB.Model(&player).Updates(player)
+	if presence.ID == 0 {
+		err := config.DB.Model(&player).Association("Presences").Append(&models.Presence{Date: goals.Date})
+		if err != nil {
+			context.JSON(http.StatusBadRequest, gin.H{
+				"message": "Could not save the presence",
+			})
+			return
+		}
+	}
 
 	for i := 0; i < goals.Value; i++ {
 		err := config.DB.Model(&player).Association("Scores").Append(&models.Score{Goal: true, Date: goals.Date})
@@ -54,6 +63,9 @@ func AddGoalToPlayer(context *gin.Context) {
 			return
 		}
 	}
+
+	player.Goals += goals.Value
+	config.DB.Model(&player).Updates(player)
 
 	context.JSON(http.StatusOK, gin.H{"player": player.TransposeStructs()})
 }
