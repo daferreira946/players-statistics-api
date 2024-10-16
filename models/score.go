@@ -2,9 +2,7 @@ package models
 
 import (
 	"gorm.io/gorm"
-	"log"
-	"regexp"
-	"time"
+	"players/helpers"
 )
 
 type Score struct {
@@ -22,9 +20,10 @@ type ScoreReturnInfo struct {
 }
 
 type TopReturnInfo struct {
-	Name      string `json:"name"`
-	Quantity  int    `json:"quantity"`
-	IsMonthly bool   `json:"is_monthly"`
+	Name      string  `json:"name"`
+	Quantity  int     `json:"quantity"`
+	PerGame   float64 `json:"per_game"`
+	IsMonthly bool    `json:"is_monthly"`
 }
 
 type ScoreToAdd struct {
@@ -34,20 +33,5 @@ type ScoreToAdd struct {
 }
 
 func (score *ScoreToAdd) ValidateDate() bool {
-	pattern := regexp.MustCompile("^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
-
-	validString := pattern.MatchString(score.Date)
-
-	log.Println(score.Date)
-
-	if !validString {
-		return false
-	}
-
-	_, err := time.Parse("2006-01-02", score.Date)
-	if err != nil {
-		return false
-	}
-
-	return true
+	return helpers.ValidateDate(score.Date)
 }

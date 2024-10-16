@@ -30,6 +30,7 @@ func HandleRequests() {
 
 	router.POST("/player/:id/addGoal", middlewares.CheckAuth, actions.AddGoalToPlayer)
 	router.POST("/player/:id/addAssist", middlewares.CheckAuth, actions.AddAssistToPlayer)
+	router.POST("/sheet", middlewares.CheckAuth, actions.ProcessSheet)
 
 	router.GET("/assists", actions.GetAllAssists)
 	router.GET("/goals", actions.GetAllGoals)

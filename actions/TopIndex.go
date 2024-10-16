@@ -1,6 +1,7 @@
 package actions
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -47,21 +48,25 @@ func GetTops(context *gin.Context) {
 		}
 	}
 
+	subquery := "select count(*) from presences where presences.player_id = players.id"
+
 	if monthYear != "" {
 		split := strings.Split(monthYear, "-")
 
 		query.Where("date_part('month', to_date(scores.date, 'YYYY-MM-DD')) = ?", split[1])
+		subquery += fmt.Sprintf(" AND date_part('month', to_date(presences.date, 'YYYY-MM-DD')) = '%s'", split[1])
 		query.Where("date_part('year', to_date(scores.date, 'YYYY-MM-DD')) = ?", split[0])
+		subquery += fmt.Sprintf(" AND date_part('year', to_date(presences.date, 'YYYY-MM-DD')) = '%s'", split[0])
 	}
 
-	query.Joins("join players on scores.player_id = players.id").Select("count(scores.*) as quantity, players.name as name, players.is_monthly as is_monthly")
-	query.Group("players.name, players.is_monthly").Order("quantity desc")
+	query.Joins("join players on scores.player_id = players.id").Select(fmt.Sprintf("count(scores.*) as quantity, players.name as name, players.is_monthly as is_monthly, count(scores.*) / (%s)::float as per_game", subquery))
+	query.Group("players.id, players.name, players.is_monthly").Order("quantity desc")
 
 	goalsQuery := query.Session(&gorm.Session{})
 
 	assistsQuery := query.Session(&gorm.Session{})
 
-	err := goalsQuery.Where("goal = ?", true).Find(&goals).Error
+	err := goalsQuery.Debug().Where("goal = ?", true).Find(&goals).Error
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
@@ -72,7 +77,7 @@ func GetTops(context *gin.Context) {
 		return
 	}
 
-	err = assistsQuery.Where("assist = ?", true).Find(&assists).Error
+	err = assistsQuery.Debug().Where("assist = ?", true).Find(&assists).Error
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{

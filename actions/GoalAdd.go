@@ -23,8 +23,6 @@ func AddGoalToPlayer(context *gin.Context) {
 		return
 	}
 
-	log.Println(goals)
-
 	if !goals.ValidateDate() {
 		context.JSON(http.StatusUnprocessableEntity, gin.H{
 			"message": "Validation error",
