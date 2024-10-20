@@ -43,7 +43,7 @@ func AddGoalToPlayer(context *gin.Context) {
 	config.DB.Where("player_id = ?", player.ID).Where("date = ?", goals.Date).First(&presence)
 
 	if presence.ID == 0 {
-		err := config.DB.Model(&player).Association("Presences").Append(&models.Presence{Date: goals.Date})
+		err := config.DB.Model(&player).Association("Presence").Append(&models.Presence{Date: goals.Date})
 		if err != nil {
 			context.JSON(http.StatusBadRequest, gin.H{
 				"message": "Could not save the presence",

@@ -59,8 +59,8 @@ func GetTops(context *gin.Context) {
 		subquery += fmt.Sprintf(" AND date_part('year', to_date(presences.date, 'YYYY-MM-DD')) = '%s'", split[0])
 	}
 
-	query.Joins("join players on scores.player_id = players.id").Select(fmt.Sprintf("count(scores.*) as quantity, players.name as name, players.is_monthly as is_monthly, count(scores.*) / (%s)::float as per_game", subquery))
-	query.Group("players.id, players.name, players.is_monthly").Order("quantity desc")
+	query.Joins("join players on scores.player_id = players.id").Select(fmt.Sprintf("count(scores.*) as quantity, players.name as name, players.is_monthly as is_monthly, count(scores.*) / NULLIF((%s), 0)::float as per_game", subquery))
+	query.Group("players.id, players.name, players.is_monthly").Order("quantity desc").Order("per_game desc")
 
 	goalsQuery := query.Session(&gorm.Session{})
 
