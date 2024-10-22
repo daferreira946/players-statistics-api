@@ -17,9 +17,9 @@ func GetAllAssists(context *gin.Context) {
 		query.Where("left(scores.date, 7) = ?", monthYear)
 	}
 
-	query.Joins("join players on scores.player_id = players.id").Select("scores.id as id, scores.date as date, players.name as player_name")
+	query.Joins("join players on scores.player_id = players.id").Select("count(scores.*) as quantity, scores.date as date, players.name as player_name")
 
-	err := query.Find(&assists).Error
+	err := query.Group("players.name, scores.date").Order("date desc").Order("player_name asc").Find(&assists).Error
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{

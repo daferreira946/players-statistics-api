@@ -14,7 +14,7 @@ type Score struct {
 }
 
 type ScoreReturnInfo struct {
-	ID         uint   `json:"id"`
+	Quantity   uint   `json:"quantity"`
 	Date       string `json:"date"`
 	PlayerName string `json:"player_name"`
 }

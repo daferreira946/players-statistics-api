@@ -66,7 +66,7 @@ func GetTops(context *gin.Context) {
 
 	assistsQuery := query.Session(&gorm.Session{})
 
-	err := goalsQuery.Debug().Where("goal = ?", true).Find(&goals).Error
+	err := goalsQuery.Where("goal = ?", true).Find(&goals).Error
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
@@ -77,7 +77,7 @@ func GetTops(context *gin.Context) {
 		return
 	}
 
-	err = assistsQuery.Debug().Where("assist = ?", true).Find(&assists).Error
+	err = assistsQuery.Where("assist = ?", true).Find(&assists).Error
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
